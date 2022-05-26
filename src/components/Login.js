@@ -16,21 +16,24 @@ const Login = ({props}) => {
 
     const startQuiz = () => props(true);
 
-    const [{email, nombre}, handleInputChange] = useForm({
+    const [{email, nombre, password}, handleInputChange] = useForm({
         email:'',
         nombre: '',
+        password: ''
     });
 
+
+    // No se puede ejecutar el login sin el token
     const handleSesion = () => {
-        console.log(email, nombre)
+        console.log(email, nombre, password)
         startQuiz();
     }
 
     return (
         <Intro>
-            <h1>Y... ¿Cual es el siguiente VideoJuego?</h1>
+            <h1>Login</h1>
             <form onSubmit={handleSesion}>
-                <span>Su correo: </span>
+                <span>Correo: </span>
                 <div>
                     <input
                         type="text"
@@ -41,7 +44,7 @@ const Login = ({props}) => {
                         placeholder="Ejemplo@.com"
                     />
                 </div>
-                <span>Su Nombre: </span>
+                <span>Nombre: </span>
                 <div>
                     <input
                         type="text"
@@ -50,6 +53,17 @@ const Login = ({props}) => {
                         value={nombre}
                         onChange={handleInputChange}
                         placeholder="Su nombre"
+                    />
+                </div>
+                <span>Contraseña: </span>
+                <div>
+                    <input
+                        type="text"
+                        className=""
+                        name="password"
+                        value={password}
+                        onChange={handleInputChange}
+                        placeholder="Ejemplo@.com"
                     />
                 </div>
             <Button type='submit' css={btnCSS}>Iniciar</Button>

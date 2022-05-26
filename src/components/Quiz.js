@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect} from 'react'
 import styled from 'styled-components'
-import axios from 'axios'
-import GameOver from './GameOver';
+import { useFetch } from '../hooks/useFetch';
 
 const QuizWindow = styled.div`
     text-align: center;
@@ -49,52 +48,52 @@ const Question = styled.div`
 `;
 
 const Quiz = () => {
-
-    const [quiz, setQuiz] = useState([]);
-    const [number, setNumber] = useState(0);
-    const [pts, setPts] = useState(0);
-
-    const shuffle = (arr) => arr.sort(() => Math.random() - 0.5);
-
+    // 'videogame/'
+    const options = ['category', 'gamer', 'plataform', 'subCategory'];
+    const [count, setCount] = useState(0);
+    //const [questions, setQuestions] = useState([]);
+    const [preferences, setPreferences] = useState({
+        category: 0,
+        plataform: 0,
+        gamer: 0,
+        subCategory: 0,
+        style: '',
+        multiplayerName: '',
+    });
+    const data = useFetch(`videogame/${options[count]}`);
     const pickAnswer = (e) => {
-
         let userAnswer = e.target.outerText;
-
-        if (quiz[number].answer === userAnswer) setPts(pts + 1);
-        setNumber(number + 1);
+        setPreferences({
+            ...preferences,
+            //! Esto debe ser igual a un id [options[count]]: userAnswer
+        })
+        setCount((count) => count ++);
     }
 
     useEffect(() => {
-        axios.get('https://opentdb.com/api.php?amount=5&category=18&difficulty=easy&type=multiple')
-            .then(res => {
-                setQuiz(res.data.results.map(item => (
-                    {
-                        question: item.question,
-                        options: shuffle([...item.incorrect_answers, item.correct_answer]),
-                        answer: item.correct_answer
-                    }
-                )));
-            })
-            .catch(err => console.error(err))
-    }, []);
+        
+    }, [count]);
 
 
     return (
-        <QuizWindow>
-            { quiz[number] &&
-                <>
-                    <Question dangerouslySetInnerHTML={{ __html: quiz[number].question }}></Question>
-                    <Options>
-                        {quiz[number].options.map((item, index) => (
-                            <Option key={index} dangerouslySetInnerHTML={{ __html: item }} onClick={pickAnswer}></Option>
-                        ))}
-                    </Options>
-                </>
-            }
-            {
-                number === 5 && <GameOver pts={pts} />
-            }
-        </QuizWindow>
+        <></>
+        /**
+         <QuizWindow>
+             {quiz[number] &&
+                 <>
+                     <Question dangerouslySetInnerHTML={{ __html: data[count].question }}></Question>
+                     <Options>
+                         {data[number].options.map((item, index) => (
+                             <Option key={index} dangerouslySetInnerHTML={{ __html: item }} onClick={pickAnswer}></Option>
+                         ))}
+                     </Options>
+                 </>
+             }
+         </QuizWindow>
+         {
+            count > 3 && <GameOver pts={pts} />
+         }
+         */
     )
 }
 
